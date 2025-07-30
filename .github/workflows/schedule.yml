@@ -1,6 +1,6 @@
 name: Rolling Forecast Manual
 
-# Sólo manual, sin cron
+# Sólo disparo manual
 on:
   workflow_dispatch:
 
@@ -31,7 +31,7 @@ jobs:
           SP_PASS: ${{ secrets.SP_PASS }}
 
       - name: Run Rolling Forecast
-        run: python src/main.py
+        run: python -m src.main
 
       - name: Commit outputs
         run: |
@@ -42,4 +42,5 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
