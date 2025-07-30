@@ -1,8 +1,8 @@
 sharepoint:
-  site_url: "https://pernodricard-my.sharepoint.com/my"
+  site_url: "https://pernodricard-my.sharepoint.com"
   username: "${{ env.SP_USER }}"         # Se sustituye en Actions con tu Secret SP_USER
   password: "${{ env.SP_PASS }}"         # Se sustituye en Actions con tu Secret SP_PASS
-  folder_path: "Shared Documents/Auto RF SO"
+  folder_path: "OneDrive - Pernod Ricard\Auto RF SO"
   extract:
   columns:
     - Mercado
