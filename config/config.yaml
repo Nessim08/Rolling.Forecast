@@ -2,7 +2,7 @@ sharepoint:
   site_url: "https://pernodricard-my.sharepoint.com/my"
   username: "nessim.esquenazi-ext@pernod-ricard.com"
   password: "Nescho1234$"
-  folder_path: "C:\Users\PR061979\OneDrive - Pernod Ricard\Auto RF SO"  # ruta relativa en SharePoint
+  folder_path: "https://pernodricard-my.sharepoint.com/my?id=%2Fpersonal%2Fnessim%5Fesquenazi%2Dext%5Fpernod%2Dricard%5Fcom%2FDocuments%2FAuto%20RF%20SO"  # ruta relativa en SharePoint
 forecast:
   periods: 12
 
