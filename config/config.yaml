@@ -1,1 +1,8 @@
+sharepoint:
+  site_url: "https://tuempresa.sharepoint.com/sites/NombreDelSitio"
+  username: "tu.usuario@tuempresa.com"
+  password: "TuPasswordOAppPassword"
+  folder_path: "Shared Documents/CarpetaForecast"  # ruta relativa en SharePoint
+forecast:
+  periods: 12
 
