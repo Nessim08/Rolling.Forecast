@@ -1,8 +1,1 @@
-      - name: Prepara config SharePoint
-        run: |
-          sed -i "s|username: .*|username: \"$SP_USER\"|g" config/config.yaml
-          sed -i "s|password: .*|password: \"$SP_PASS\"|g" config/config.yaml
-        env:
-          SP_USER: ${{ secrets.SP_USER }}
-          SP_PASS: ${{ secrets.SP_PASS }}
 
