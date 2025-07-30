@@ -3,9 +3,8 @@
 import io
 import pandas as pd
 import yaml
-from shareplum import Office365
-from shareplum import Site
-from shareplum.site import Version
+from office365.sharepoint.client_context import ClientContext
+from office365.runtime.auth.user_credential import UserCredential
 
 def load_config():
     return yaml.safe_load(open('config/config.yaml'))
@@ -14,26 +13,32 @@ def extract_from_sharepoint():
     cfg = load_config()['sharepoint']
     ext = cfg['extract']
 
-    # 1) Autenticación contra Azure AD (login.microsoftonline.com)
-    authcookie = Office365(
-        "https://login.microsoftonline.com",
-        username=cfg['username'],
-        password=cfg['password']
-    ).GetCookies()
+    # 1) Conectar a SharePoint / OneDrive con autenticación moderna
+    ctx = ClientContext(cfg['site_url']).with_credentials(
+        UserCredential(cfg['username'], cfg['password'])
+    )
 
-    # 2) Conexión al site real de SharePoint / OneDrive
-    site = Site(cfg['site_url'], version=Version.v365, authcookie=authcookie)
-    folder = site.Folder(cfg['folder_path'])
+    # 2) Acceder a la carpeta configurada
+    folder = ctx.web.get_folder_by_server_relative_url(cfg['folder_path'])
+    files = folder.files
+    ctx.load(files)
+    ctx.execute_query()
 
-    # 3) Leer y concatenar todos los CSV
     dfs = []
-    for file_info in folder.files:
-        name = file_info['Name']
+    for file in files:
+        name = file.properties["Name"]
         if name.lower().endswith('.csv'):
-            content = folder.get_file(name)
-            # parse_dates con el nombre real de tu columna de fecha
+            # 3) Descargar el contenido del archivo
+            download = ctx.web.get_file_by_server_relative_url(
+                file.properties["ServerRelativeUrl"]
+            ).download()  # esto devuelve un RequestOptions
+            ctx.execute_query()
+            content = download.content  # bytes del CSV
+
+            # 4) Leer en pandas
             df = pd.read_csv(io.BytesIO(content), parse_dates=['Fecha'])
-            # Renombrar columnas a los nombres que usa el downstream
+
+            # 5) Renombrar columnas a los nombres internos
             df = df.rename(columns={
                 'Mercado': 'Market',
                 'Canal': 'Channel',
@@ -43,20 +48,25 @@ def extract_from_sharepoint():
                 'Price': 'Price',
                 'Scenario': 'Scenario'
             })
-            # 4) Seleccionar solo las columnas configuradas
+
+            # 6) Seleccionar sólo las columnas que configuras
             df = df[['Market', 'Channel', 'SKU', 'Date', 'Sales', 'Price', 'Scenario']]
-            # 5) Filtrar por escenarios
+
+            # 7) Filtrar escenarios
             df = df[df['Scenario'].isin(ext['scenarios'])]
+
             dfs.append(df)
 
     if not dfs:
-        raise ValueError("No CSV encontrados en SharePoint/OneDrive")
+        raise ValueError("No CSV encontrados en la carpeta de SharePoint/OneDrive")
 
+    # 8) Concatenar y devolver
     return pd.concat(dfs, ignore_index=True)
 
 # Alias para main.py
 def extract_data():
     return extract_from_sharepoint()
+
 
 
 
