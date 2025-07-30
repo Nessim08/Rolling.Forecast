@@ -1,1 +1,10 @@
+pandas
+numpy
+PyYAML
+shareplum          # Para conectarse a SharePoint
+office365-rest    # Dependencia de SharePlum
+statsmodels
+sqlalchemy        # (si sigues necesitando BD en paralelo)
+pyodbc
+matplotlib
 
