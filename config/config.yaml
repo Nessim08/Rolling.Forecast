@@ -1,28 +1,36 @@
 sharepoint:
-  site_url: "https://pernodricard-my.sharepoint.com"
-  username: "${{ env.SP_USER }}"         # Se sustituye en Actions con tu Secret SP_USER
-  password: "${{ env.SP_PASS }}"         # Se sustituye en Actions con tu Secret SP_PASS
-  folder_path: "OneDrive - Pernod Ricard\Auto RF SO"
+  # Site URL de tu OneDrive for Business (personal)
+  site_url: "https://pernodricard-my.sharepoint.com/personal/nessim_esquenazi_ext_pernod_ricard_com"
+
+  # Carpeta relativa dentro de la librería 'Documents'
+  folder_path: "Documents/Auto RF SO/data"
+
+  username: "${{ env.SP_USER }}"
+  password: "${{ env.SP_PASS }}"
+
   extract:
-  columns:
-    - Mercado
-    - Canal
-    - Cliente anaplan
-    - Marca Retrive
-    - SKU Pareto
-    - SKU h Anaplan
-    - Descripcion
-    - CC
-    - Lista de precios
-    - Sucursal
-    - Región
-    - Scenario     # si en tus CSV existe esta columna
-  scenarios:       # lo veremos en el punto 2
-    - A25
-    - RF10
-    - RF01
+    columns:
+      - Mercado
+      - Canal
+      - Cliente anaplan
+      - Marca Retrive
+      - SKU Pareto
+      - SKU h Anaplan
+      - Descripcion
+      - CC
+      - Lista de precios
+      - Sucursal
+      - Región
+      - Scenario
+    scenarios:
+      - A25
+      - RF10
+      - RF01
+
 prices:
   file: "data/price_list.csv"
+
 forecast:
   periods: 12
+
 
